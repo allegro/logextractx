@@ -1,0 +1,3 @@
+[MESSAGES CONTROL]
+disable=relative-beyond-top-level,invalid-name,not-an-iterable,unsubscriptable-object,too-few-public-methods
+

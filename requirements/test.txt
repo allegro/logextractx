@@ -1,0 +1,8 @@
+pytest==5.4.1
+pytest-cov==2.8.1
+testfixtures==6.17.0
+flake8==3.8.4
+mypy==0.800
+mypy-extensions==0.4.3
+flake8-pylint==0.1.1
+tox==3.23.0

@@ -1,0 +1,5 @@
+huey==2.2.0
+Django==3.0.6
+redis==3.5.2
+decorator==4.4.2
+

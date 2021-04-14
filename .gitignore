@@ -1,0 +1,13 @@
+.venv
+.*.sw*
+.coverage
+__pycache__
+htmlcov
+.*cache
+/logextractx.egg-info/
+/tags
+/.idea/
+tests-results
+build
+dist
+.tox
