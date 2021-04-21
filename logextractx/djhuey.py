@@ -14,7 +14,7 @@ decorator by:
 import logging
 from typing import Callable
 
-from huey.contrib import djhuey
+from huey.contrib import djhuey  # noqa
 
 from .logger import LogExtraCtxAdapter
 from .middleware import LogCtxData
@@ -65,6 +65,7 @@ def ctx_to_logger(fn):
             # LogCtxData.extra is cleared and info about request-id/session-id is
             # lost
             logging.getLogger(__name__).exception("Uncaught exception in task %s", fn)
+            return None
         finally:
             if orig_extra:  # pragma: no branch
                 extra.clear()

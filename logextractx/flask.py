@@ -1,6 +1,6 @@
 """ flask part of request processing / "middleware" """
 
-import flask
+import flask  # noqa
 
 from logextractx.middleware import LogCtxData, uniqid
 
