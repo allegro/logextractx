@@ -3,8 +3,9 @@ COV_PARAMS=--cov=logextractx --cov-report=html --cov-report=term-missing --no-co
             --cov-fail-under=100 --cov-branch
 PYTEST_PARAMS=--tb=native -v --color=auto $(COV_PARAMS)
 
-PYPI_REPOSITORY=your-repository
-PYPI_PASS=your-pass
+# export TWINE_REPOSITORY_URL?=
+export TWINE_USERNAME?=__token__
+export TWINE_PASSWORD?=your_token
 
 TOX_ENVS=""
 
@@ -31,9 +32,18 @@ pytestmp:
 covreport:
 	make tests || open htmlcov/index.html  # probably different command in linux
 
-publish: clean
-	python setup.py bdist_wheel
-	twine upload -r $(PYPI_REPOSITORY) -p"$(PYPI_PASS)" --verbose dist/*
+tmp:
+	set
+
+
+build: clean
+	pip3 install --upgrade build
+	python3 -m build
+
+publish:
+	make build
+	pip3 install --upgrade twine
+	twine upload --verbose dist/*
 
 clean:
 	rm -rf dist build
