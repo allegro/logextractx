@@ -3,7 +3,6 @@ COV_PARAMS=--cov=logextractx --cov-report=html --cov-report=term-missing --no-co
             --cov-fail-under=100 --cov-branch
 PYTEST_PARAMS=--tb=native -v --color=auto $(COV_PARAMS)
 
-# export TWINE_REPOSITORY_URL?=
 export TWINE_USERNAME?=__token__
 export TWINE_PASSWORD?=your_token
 
@@ -31,10 +30,6 @@ pytestmp:
 
 covreport:
 	make tests || open htmlcov/index.html  # probably different command in linux
-
-tmp:
-	set
-
 
 build: clean
 	pip3 install --upgrade build
