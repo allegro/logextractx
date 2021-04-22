@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='logextractx',
-    version='0.3.0rc1',
+    version='0.3.0rc2',
     author='Maho (Lukasz Mach)',
     author_email='lukasz.mach@allegro.pl',
     packages=['logextractx'],
