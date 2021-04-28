@@ -30,6 +30,8 @@ def test_tldict(threadpool):
         assert tldict['foo'] == 'bar'
         assert tldict['bar'] == 'foo'
 
+        del tldict['bar']
+
         # WHEN: storing another value in dictionary
         tldict['key_from_thread'] = 'value_from_thread'
 
@@ -38,6 +40,9 @@ def test_tldict(threadpool):
 
     # THEN: there is no 'key_from_thread' in dictionary
     assert 'key_from_thread' not in tldict
+
+    # and key 'bar' which has been removed in the thread, still exists here
+    assert tldict.get('bar') == 'foo'
 
 
 def test_unique_seq(monkeypatch):

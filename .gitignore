@@ -11,3 +11,4 @@ tests-results
 build
 dist
 .tox
+tests/django_app/db.sqlite3

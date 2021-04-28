@@ -32,11 +32,11 @@ Also, you need to add filter into logging
 ```
 """
 
-import hashlib
 import logging
 import os
 import uuid
 import threading
+from typing import Dict
 
 from logextractx import logger as ctxlogger
 
@@ -105,19 +105,31 @@ class LogCtxData:
 
         tracks requests and sessions, and helps LogExtraCtxAdapter to add
             request-id and session-id to context of logging.
+
+        Flask has no session id exposed, and session-id in Django can change (depending on session
+        engine used), so we cannot rely on it, so it's better to just generate some uniqid
+        and store it in session data.
     """
     extra = TLDict({"request-id": None, "session-id": None})
 
     @classmethod
-    def reset(cls, session_id, do_hash=True):
-        """ generate and set request id, hash (or not?) session_id
-            store it in threadlocal
+    def init_request_data(cls, session: Dict[str, str]):
         """
-        if do_hash:
-            session_id = hashlib.sha1(session_id).hexdigest()
+        - generate and set request id
+        - get or create session_id
+        - store them both in session dict
+        - store it in threadlocal
+        """
+        if not session.get("x-logextractx-sessid"):
+            session_id = uniqid()
+            session["x-logextractx-sessid"] = session_id
+        else:
+            session_id = session["x-logextractx-sessid"]
+
+        request_id = uniqid()
 
         cls.extra.reset()
-        cls.extra["request-id"] = uniqid()
+        cls.extra["request-id"] = request_id
         cls.extra["session-id"] = session_id
 
 
@@ -131,10 +143,7 @@ class LogCtxDjangoMiddleware:
 
     def __call__(self, request):
         try:
-            if request.session.session_key is None:
-                request.session.save()
-            session_id = request.session.session_key.encode("UTF-8")
-            LogCtxData.reset(session_id)
+            LogCtxData.init_request_data(session=request.session)
         except AttributeError:
             # when there is no session
             pass

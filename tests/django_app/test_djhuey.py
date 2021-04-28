@@ -8,14 +8,13 @@ from logextractx import logger as logger_mod
 from logextractx.middleware import LogCtxData
 
 
-@pytest.fixture
-def django_configuration(django_configuration):
+@pytest.fixture(autouse=True)
+def add_huey_to_settings(settings):
     """ override default django configuration - add HUEY variable """
-    django_configuration['HUEY'] = {'always_eager': True}
-    return django_configuration
+    settings.HUEY = {'always_eager': True}
 
 
-def test_logger_to_ctx(configure_django):
+def test_logger_to_ctx():
     """ check if logger parameter become logextra under decorator """
     # django settings must be configured when importing djhuey
     from logextractx.djhuey import logger_to_ctx
@@ -34,14 +33,15 @@ def test_logger_to_ctx(configure_django):
     _fn("foo", "bar", logger=logger)  # pylint: disable=unexpected-keyword-arg
 
 
-def test_logger_to_ctx_noparam(configure_django, monkeypatch, logctxm_extra):
+@pytest.mark.usefixture("logctx_extra_restore")
+def test_logger_to_ctx_noparam():
     """ check if logger parameter will be filled from LogCtxData.extra
     when explicite logger param is not present """
     # django settings must be configured when importing djhuey
     from logextractx.djhuey import logger_to_ctx
 
     # GIVEN: extra gets 'barbar': 'fofo' param
-    monkeypatch.setitem(LogCtxData.extra, 'barbar', 'fofo')
+    LogCtxData.extra["barbar"] = 'fofo'
 
     # GIVEN: function decorated with logger_to_ctx
     @logger_to_ctx
@@ -55,7 +55,7 @@ def test_logger_to_ctx_noparam(configure_django, monkeypatch, logctxm_extra):
 
 
 @pytest.fixture
-def logctxm_extra():
+def logctx_extra_restore():
     """ fixture which reverts LogCtxData.extra to old values after test end """
     old_extra = LogCtxData.extra.copy()
 
@@ -65,7 +65,8 @@ def logctxm_extra():
     LogCtxData.extra.update(old_extra)
 
 
-def test_ctx_to_logger(configure_django, logctxm_extra):
+@pytest.mark.usefixture("logctx_extra_restore")
+def test_ctx_to_logger():
     """ check if logextra dict will be converted to LogCtxData.extra
     in underlying function """
     # pylint: disable=unexpected-keyword-arg
@@ -90,7 +91,8 @@ def test_ctx_to_logger(configure_django, logctxm_extra):
     assert error is None
 
 
-def test_ctx_to_logger_noparam(configure_django, logctxm_extra):
+@pytest.mark.usefixture("logctx_extra_restore")
+def test_ctx_to_logger_noparam():
     """ check if  will be converted to LogCtxData.extra
     in underlying function """
     # pylint: disable=unexpected-keyword-arg
@@ -117,7 +119,8 @@ def test_ctx_to_logger_noparam(configure_django, logctxm_extra):
 
 
 @pytest.mark.tmp
-def test_ctx2l_task_failed(configure_django, logctxm_extra, log_capture):
+@pytest.mark.usefixture("logctx_extra_restore")
+def test_ctx2l_task_failed(log_capture):
     """ check if uncaught exception is caught in @ctx_to_logger """
     # django settings must be configured when importing djhuey
     from logextractx.djhuey import ctx_to_logger
@@ -136,7 +139,7 @@ def test_ctx2l_task_failed(configure_django, logctxm_extra, log_capture):
 
 
 @pytest.mark.tmp
-def test_real_djhuey_task(configure_django):
+def test_real_djhuey_task():
     """ check if task decorated by djhuey.task pass through the logger arg"""
     from logextractx.djhuey import task
 
@@ -160,7 +163,8 @@ def test_real_djhuey_task(configure_django):
     assert error is None
 
 
-def test_composite_decorator(configure_django, logctxm_extra):
+@pytest.mark.usefixture("logctx_extra_restore")
+def test_composite_decorator():
     """ check if ctx2nthru_decorator will compose three decorators together """
     # pylint: disable=unexpected-keyword-arg
     from logextractx.djhuey import ctx2nthru_decorator
