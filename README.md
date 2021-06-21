@@ -6,7 +6,7 @@ parameters in logging a bit easier.
 
 ## Rationale
 
-I have [blognote] about it (not published yet, stay tuned!)
+I have [blognote] about it.
 
 ## Usage
 
@@ -21,7 +21,7 @@ context:
 from logextractx.logger import getLogger
 logger = getLogger(__name__)
 [...]
-loclogger = logger.local(extra={'DATA_IN': 'CURRENT_CONTEXT})
+loclogger = logger.local(extra={'DATA_IN': 'CURRENT_CONTEXT'})
 ```
 
 Eg:
@@ -144,4 +144,4 @@ And then you will have all extra in single log line.
 # License:
 Licensed under the Apache License, Version 2.0
 
-[blognote]: https://blog.allegro.tech/
+[blognote]: https://blog.allegro.tech/2021/06/python-logging.html
