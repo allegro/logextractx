@@ -4,13 +4,13 @@ So far such tracking id is made only for Django.
 
 In your DJANGO project, you should use the following:
 
-* append `logextractx.middleware.LogCtxMiddleware` to your `MIDDLEWARE` in settings:
+* append `logextractx.middleware.LogCtxDjangoMiddleware` to your `MIDDLEWARE` in settings:
 ```python
 MIDDLEWARE = [
     [...]
      'django.contrib.sessions.middleware.SessionMiddleware',
     [...]
-    'logextractx.middleware.LogCtxMiddleware',
+    'logextractx.middleware.LogCtxDjangoMiddleware',
  ]
 ```
 
@@ -37,6 +37,8 @@ import os
 import uuid
 import threading
 from typing import Dict
+
+from deprecation import deprecated
 
 from logextractx import logger as ctxlogger
 
@@ -149,6 +151,11 @@ class LogCtxDjangoMiddleware:
             pass
 
         return self.get_response(request)
+
+
+@deprecated(details="Use LogCtxDjangoMiddleware instead")
+class LogCtxMiddleware(LogCtxDjangoMiddleware):
+    pass
 
 
 class RidFilter(logging.Filter):

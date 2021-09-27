@@ -15,5 +15,6 @@ setup(
     license='Apache License v 2.0',
     description='LoggerAdapter, which helps you to propagate context information',
     long_description=open('README.md').read(),
-    long_description_content_type="text/markdown"
+    long_description_content_type="text/markdown",
+    install_requires=["deprecation"]
 )
