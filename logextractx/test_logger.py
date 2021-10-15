@@ -53,3 +53,10 @@ def test_parent_propagate(log_capture):
     assert log_capture.records[-1].msg == "just msg"
     assert log_capture.records[-1].parent == "logger"
     assert log_capture.records[-1].child == "also logger"
+
+
+def test_get_logger_without_name(log_capture):
+    """ check if it is possible to get logger without providing name """
+    logger = logger_mod.getLogger()
+    logger.info("just msg")
+    assert log_capture.records[-1].msg == "just msg"

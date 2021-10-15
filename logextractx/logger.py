@@ -89,10 +89,10 @@ class LogExtraCtxAdapter(logging.LoggerAdapter):
         return msg, kwargs
 
 
-def getLogger(name: str, extra: Optional[dict] = None):
+def getLogger(name: str = None, extra: Optional[dict] = None):
     """
         returns logger adapted to extra context passing.
-        :param name:str - name of logger (just like in logging.getLogger()
+        :param name:str - optional string with name of logger (just like in logging.getLogger()
         :param extra:dict - optional dictionary with extra
     """
     extra = extra or {}
