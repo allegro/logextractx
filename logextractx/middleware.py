@@ -155,7 +155,7 @@ class LogCtxDjangoMiddleware:
 
 @deprecated(details="Use LogCtxDjangoMiddleware instead")
 class LogCtxMiddleware(LogCtxDjangoMiddleware):
-    pass
+    """ deprecated alias for LogCtxDjangoMiddleware """
 
 
 class RidFilter(logging.Filter):
